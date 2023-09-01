@@ -16,7 +16,6 @@ router.post("/notes/create", isAuthenticated, async (req, res, next) => {
   try {
     const newNote = await Note.create({
       title,
-      date,
       description,
     });
     await Note.findByIdAndUpdate(newNote._id, {
@@ -55,11 +54,11 @@ router.get("/notes/:noteId", async (req, res, next) => {
 // PUT /notes/:noteId -  Update a single note
 router.put("/notes/:noteId", async (req, res, next) => {
   const { noteId } = req.params;
-  const { title, date, description } = req.body;
+  const { title, description } = req.body;
   try {
     const updateNote = await Task.findByIdAndUpdate(
       noteId,
-      { title, date, description },
+      { title, description },
       { new: true }
     );
     res.status(200).json(updateNote);
