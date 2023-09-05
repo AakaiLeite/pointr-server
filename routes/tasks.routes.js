@@ -57,6 +57,7 @@ router.get("/tasks/:taskId", async (req, res, next) => {
 router.put("/tasks/:taskId", async (req, res, next) => {
   const { taskId } = req.params;
   const { title, date, description, completed } = req.body;
+  console.log(req.body);
   try {
     const updateTask = await Task.findByIdAndUpdate(
       taskId,

@@ -57,8 +57,9 @@ router.get("/events/:eventId", async (req, res, next) => {
 router.put("/events/:eventId", async (req, res, next) => {
   const { eventId } = req.params;
   const { title, date, description, completed } = req.body;
+  console.log(req.body);
   try {
-    const updateEvent = await Task.findByIdAndUpdate(
+    const updateEvent = await Event.findByIdAndUpdate(
       eventId,
       { title, date, description, completed },
       { new: true }
