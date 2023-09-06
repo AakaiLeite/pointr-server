@@ -79,7 +79,7 @@ router.delete("/events/:eventId", async (req, res, next) => {
     await User.findByIdAndUpdate(eventResponse.user, {
       $pull: { event: eventId },
     });
-    res.status(200).json(eventResponse);
+    res.status(200).json(`Event ${eventId} deleted`);
   } catch (error) {
     res.status(500).json(error);
   }
