@@ -12,13 +12,13 @@ const User = require("../models/User.model");
 // POST /tasks/create -  Create a task
 router.post("/tasks/create", isAuthenticated, async (req, res, next) => {
   const user = req.payload;
-  const { title, date, description } = req.body;
+  const { title, date, description, completed } = req.body;
   try {
     const newTask = await Task.create({
       title,
       date,
       description,
-      completed: false,
+      completed,
     });
     await Task.findByIdAndUpdate(newTask._id, {
       $push: { user: user._id },
@@ -74,7 +74,10 @@ router.put("/tasks/:taskId", async (req, res, next) => {
 router.delete("/tasks/:taskId", async (req, res, next) => {
   const { taskId } = req.params;
   try {
-    const response = await Task.findByIdAndDelete(taskId);
+    const taskResponse = await Task.findByIdAndDelete(taskId);
+    await User.findByIdAndUpdate(taskResponse.user, {
+      $pull: { task: taskId },
+    });
     res.status(200).json(`Task ${taskId} deleted`);
   } catch (error) {
     res.status(500).json(error);

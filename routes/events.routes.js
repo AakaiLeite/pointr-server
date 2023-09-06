@@ -6,19 +6,20 @@ const { isAuthenticated } = require("../middleware/jwt.middleware");
 // Require the model
 const Event = require("../models/Event.model");
 const User = require("../models/User.model");
+const e = require("express");
 
 // Start handling routes
 
 // POST /events/create -  Create an event
 router.post("/events/create", isAuthenticated, async (req, res, next) => {
   const user = req.payload;
-  const { title, date, description } = req.body;
+  const { title, date, description, completed } = req.body;
   try {
     const newEvent = await Event.create({
       title,
       date,
       description,
-      completed: false,
+      completed,
     });
     await Event.findByIdAndUpdate(newEvent._id, {
       $push: { user: user._id },
@@ -74,8 +75,11 @@ router.put("/events/:eventId", async (req, res, next) => {
 router.delete("/events/:eventId", async (req, res, next) => {
   const { eventId } = req.params;
   try {
-    const deleteEvent = await Event.findByIdAndDelete(eventId);
-    res.status(200).json(deleteEvent);
+    const eventResponse = await Event.findByIdAndDelete(eventId);
+    await User.findByIdAndUpdate(eventResponse.user, {
+      $pull: { event: eventId },
+    });
+    res.status(200).json(eventResponse);
   } catch (error) {
     res.status(500).json(error);
   }
