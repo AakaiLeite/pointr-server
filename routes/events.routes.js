@@ -6,7 +6,6 @@ const { isAuthenticated } = require("../middleware/jwt.middleware");
 // Require the model
 const Event = require("../models/Event.model");
 const User = require("../models/User.model");
-const e = require("express");
 
 // Start handling routes
 
@@ -73,7 +72,7 @@ router.put("/events/:eventId", isAuthenticated, async (req, res, next) => {
 });
 
 // DELETE /events/:eventId -  Delete a single event
-router.delete("/events/:eventId", async (req, res, next) => {
+router.delete("/events/:eventId", isAuthenticated, async (req, res, next) => {
   const { eventId } = req.params;
   try {
     const eventResponse = await Event.findByIdAndDelete(eventId);

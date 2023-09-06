@@ -72,7 +72,7 @@ router.put("/tasks/:taskId", isAuthenticated, async (req, res, next) => {
 });
 
 // DELETE /tasks/:taskId -  Delete a single task
-router.delete("/tasks/:taskId", async (req, res, next) => {
+router.delete("/tasks/:taskId", isAuthenticated, async (req, res, next) => {
   const { taskId } = req.params;
   try {
     const taskResponse = await Task.findByIdAndDelete(taskId);
