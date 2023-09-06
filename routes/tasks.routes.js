@@ -33,9 +33,10 @@ router.post("/tasks/create", isAuthenticated, async (req, res, next) => {
 });
 
 // GET /tasks -  Get all tasks
-router.get("/tasks", async (req, res, next) => {
+router.get("/tasks", isAuthenticated, async (req, res, next) => {
+  const user = req.payload;
   try {
-    const response = await Task.find().populate("user");
+    const response = await Task.find({user}).populate("user");
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json(error);
