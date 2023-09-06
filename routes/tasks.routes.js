@@ -44,7 +44,7 @@ router.get("/tasks", isAuthenticated, async (req, res, next) => {
 });
 
 // GET /tasks/:taskId -  Get a single task
-router.get("/tasks/:taskId", async (req, res, next) => {
+router.get("/tasks/:taskId", isAuthenticated, async (req, res, next) => {
   const { taskId } = req.params;
   try {
     const response = await Task.findById(taskId).populate("user");
@@ -55,7 +55,7 @@ router.get("/tasks/:taskId", async (req, res, next) => {
 });
 
 // PUT /tasks/:taskId -  Update a single task
-router.put("/tasks/:taskId", async (req, res, next) => {
+router.put("/tasks/:taskId", isAuthenticated, async (req, res, next) => {
   const { taskId } = req.params;
   const { title, date, description, completed } = req.body;
   console.log(req.body);

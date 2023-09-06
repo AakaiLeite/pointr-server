@@ -34,9 +34,10 @@ router.post("/events/create", isAuthenticated, async (req, res, next) => {
 });
 
 // GET /events -  Get all events
-router.get("/events", async (req, res, next) => {
+router.get("/events", isAuthenticated, async (req, res, next) => {
+  const user = req.payload;
   try {
-    const response = await Event.find().populate("user");
+    const response = await Event.find({user}).populate("user");
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json(error);
@@ -44,7 +45,7 @@ router.get("/events", async (req, res, next) => {
 });
 
 // GET /events/:eventId -  Get a single event
-router.get("/events/:eventId", async (req, res, next) => {
+router.get("/events/:eventId", isAuthenticated, async (req, res, next) => {
   const { eventId } = req.params;
   try {
     const response = await Event.findById(eventId).populate("user");
@@ -55,7 +56,7 @@ router.get("/events/:eventId", async (req, res, next) => {
 });
 
 // PUT /events/:eventId -  Update a single event
-router.put("/events/:eventId", async (req, res, next) => {
+router.put("/events/:eventId", isAuthenticated, async (req, res, next) => {
   const { eventId } = req.params;
   const { title, date, description, completed } = req.body;
   console.log(req.body);
